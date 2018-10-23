@@ -2,17 +2,21 @@ import React, {Component} from 'react';
 import Search from '../components/Search.js'
 import '../styles/header.css';
 import {withRouter} from "react-router-dom";
+import {searchActions} from '../actions/searchActions.js';
+import { connect } from 'react-redux';
 
 class Header extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     goToPageExplorer(){
+        let payload = {};
+        payload.item = "";
+        this.props.setTag(payload);
         this.props.history.push('/explore');
     }
 
     goToPageHome(){
+        let payload = {};
+        payload.item = "";
+        this.props.setTag(payload);
         this.props.history.push('/');
     }
 
@@ -39,4 +43,12 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+const mapStateToProps = (state) => ({
+    item: state.searchReducers.item,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    setTag: (payload) => dispatch(searchActions.actionSearch(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

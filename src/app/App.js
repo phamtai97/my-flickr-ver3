@@ -7,7 +7,6 @@ import Photo from '../components/Photo.js';
 import Tag from '../components/Tag.js';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { BrowserRouter, Switch} from 'react-router-dom';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import {store} from '../store/store.js';
 

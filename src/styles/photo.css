@@ -116,3 +116,7 @@
 .tag:active{
   background: rgb(153, 152, 152);
 }
+
+.loading{
+  display: flex;
+}

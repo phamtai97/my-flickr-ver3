@@ -1,4 +1,4 @@
-import {exploreConstants} from '../constants/exploreConstants.js';
+import {tagConstants} from '../constants/tagConstants';
 
 const initialState = {
     hasMore: true,
@@ -6,15 +6,20 @@ const initialState = {
     numberPage: 1,
 };
 
-export default function exploreReducers(state = initialState, actions){
+export default function tagReducers(state = initialState, actions){
     switch(actions.type){
-        case exploreConstants.EXPLORE_LOADMORE:
+        case tagConstants.TAG_LOADMORE:
             return{
                 ...state,
                 hasMore: actions.payload.hasMore,
                 elements: state.elements.concat(actions.payload.elements),
                 numberPage: actions.payload.numberPage,
             };
+        case tagConstants.TAG_RESET:
+            return{
+                ...state,
+                elements: [],
+            }
         default:
             return state;
     }

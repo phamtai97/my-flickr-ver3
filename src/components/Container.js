@@ -3,6 +3,9 @@ import Gallery from 'react-grid-gallery';
 import iconview from '../resource/iconview.png';
 import {withRouter} from "react-router-dom";
 import '../styles/item.css';
+import {searchActions} from '../actions/searchActions.js';
+import { connect } from 'react-redux';
+
 class Container extends Component {
     constructor(props){
         super(props);
@@ -12,6 +15,9 @@ class Container extends Component {
     onClickThumbnail (index) {
         var images = this.props.images;
         var image = images[index];
+        let payload = {};
+        payload.item = '';
+        this.props.setTag(payload);
         this.props.history.push('/photos/' + image.id);
     }
 
@@ -81,4 +87,12 @@ const customTagStyle = {
     margin: "2px"
 };
 
-export default withRouter(Container);
+const mapStateToProps = (state) => ({
+    item: state.searchReducers.item,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    setTag: (payload) => dispatch(searchActions.actionSearch(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Container));

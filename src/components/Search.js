@@ -3,23 +3,25 @@ import SearchInput from 'react-search-input'
 import '../styles/search.css';
 import iconSearch from '../resource/iconsearch.png';
 import {withRouter} from "react-router-dom";
+import {searchActions} from '../actions/searchActions';
+import { connect } from 'react-redux';
 
 class Search extends Component {
     constructor(props) {
         super(props);
-        this.state={
-            searchItem:'',
-        }
         this.searchUpdated = this.searchUpdated.bind(this);
         this.searchItems = this.searchItems.bind(this);
     }
 
     searchUpdated (item) {
-        this.setState({searchItem: item});
+        let payload = {};
+        payload.item = item;
+        this.props.searchUpdated(payload);
     }
 
     searchItems(){
-        this.props.history.push('/photos/tags/' + this.state.searchItem);
+        const {item} = this.props;
+        this.props.history.push('/photos/tags/' + item);
     }
 
     getTag(){
@@ -32,11 +34,11 @@ class Search extends Component {
     }
 
     render() {
-        const tag = this.getTag();
+        const {item} = this.props;
         return (
             <div className="search">
                 <div className = "search-conatainer" >
-                    <SearchInput value={tag} className="search-input" onChange={this.searchUpdated} placehodler="tai" onKeyUp={(event) => {
+                    <SearchInput value={item} className="search-input" onChange={this.searchUpdated} onKeyUp={(event) => {
                         if (event.key === 'Enter') {
                             this.searchItems();
                         }}}/>
@@ -50,4 +52,12 @@ class Search extends Component {
     }
 }
 
-export default withRouter(Search);
+const mapStateToProps = (state) => ({
+    item: state.searchReducers.item,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    searchUpdated: (payload) => dispatch(searchActions.actionSearch(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Search));

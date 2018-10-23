@@ -4,18 +4,22 @@ import axios from 'axios';
 import ReactLoading from "react-loading";
 import InfiniteScroller from 'react-infinite-scroller';
 import Container from '../components/Container';
+import {tagActions} from  '../actions/tagActions.js';
+import { connect } from 'react-redux';
+import {searchActions} from '../actions/searchActions.js';
+
 
 const key_flickr = "f37e96732f6075d33fc9f734702eaf7d";
 class Tag extends Component {
     constructor(props) {
-    super(props);
-    this.state = {
-        hasMore: true,
-        elements: [],
-        numberPage: 1,
-        isLoading:false,
-        raw: ""
-        };
+        super(props);
+        this.state = {
+                hasMore: true,
+                elements: [],
+                numberPage: 1,
+                isLoading:false,
+                raw: ""
+            };
     }
 
     type = "spokes";
@@ -50,7 +54,22 @@ class Tag extends Component {
             })
         }
     }
+
+    getTag(){
+        const url = window.location.href.split('/');
+        if(url.length === 6 && url[4] === "tags"){
+            return url[5];
+        }else{
+            return null;
+        }
+    }
+
     render() {
+        const tag = this.getTag();
+        let payload = {};
+        payload.item = tag;
+        this.props.setTag(payload);
+
         const loader =
             <div className="loader" key={0}>
                 <ReactLoading type={this.type} color="black" height={100} width={100}/>
@@ -85,4 +104,22 @@ class Tag extends Component {
     }
 }
 
-export default Tag;
+
+const mapStateToProps = (state) => ({
+    hasMore: state.tagReducers.hasMore,
+    elements: state.tagReducers.elements,
+    numberPage: state.tagReducers.numberPage,
+    item: state.searchReducers.item,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    loadMore: (payload) => dispatch(tagActions.actionLoadMore(payload)),
+    reset: () => dispatch(tagActions.actionReset),
+    setTag: (payload) => dispatch(searchActions.actionSearch(payload)),    
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Tag);
